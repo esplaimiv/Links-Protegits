@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Employee Feedback Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e74c3c;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .rating-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .rating-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .rating-table td {
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .rating-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        .rating-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #4a90e2;
+        }
+
+        .text-areas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .anonymous-notice {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .form-content {
+                padding: 20px;
+            }
+            
+            .text-areas {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .rating-table {
+                font-size: 0.85rem;
+            }
+            
+            .rating-table th, .rating-table td {
+                padding: 10px 5px;
+            }
+            
+            input[type="radio"] {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Employee Feedback Form</h1>
+            <p>Your voice matters - Help us improve our workplace</p>
+        </div>
+        
+        <div class="form-content">
+            <div class="anonymous-notice">
+                🔒 This form is completely anonymous. No personal information will be stored or tracked.
+            </div>
+            
+            <form id="feedbackForm" name="employee-feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <div class="section">
+                    <h2 class="section-title">Basic Information</h2>
+                    <!-- Hidden field for spam protection -->
+                    <div style="display: none;">
+                        <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Human Resources">Human Resources</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Operations">Operations</option>
+                                <option value="Customer Service">Customer Service</option>
+                                <option value="IT">IT</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenure">How long have you been with the company?</label>
+                            <select id="tenure" name="tenure" required>
+                                <option value="">Select tenure</option>
+                                <option value="Less than 6 months">Less than 6 months</option>
+                                <option value="6 months - 1 year">6 months - 1 year</option>
+                                <option value="1 - 2 years">1 - 2 years</option>
+                                <option value="2 - 5 years">2 - 5 years</option>
+                                <option value="5+ years">5+ years</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Agreement Statements</h2>
+                    <p style="margin-bottom: 20px; color: #7f8c8d;">Please indicate your level of agreement with the following statements:</p>
+                    
+                    <table class="rating-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Statement</th>
+                                <th>Highly Disagree</th>
+                                <th>Disagree</th>
+                                <th>Neutral</th>
+                                <th>Agree</th>
+                                <th>Highly Agree</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>I like my job.</td>
+                                <td><input type="radio" name="like_job" value="1" required></td>
+                                <td><input type="radio" name="like_job" value="2"></td>
+                                <td><input type="radio" name="like_job" value="3"></td>
+                                <td><input type="radio" name="like_job" value="4"></td>
+                                <td><input type="radio" name="like_job" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>I like my coworkers.</td>
+                                <td><input type="radio" name="like_coworkers" value="1" required></td>
+                                <td><input type="radio" name="like_coworkers" value="2"></td>
+                                <td><input type="radio" name="like_coworkers" value="3"></td>
+                                <td><input type="radio" name="like_coworkers" value="4"></td>
+                                <td><input type="radio" name="like_coworkers" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>I like my managers.</td>
+                                <td><input type="radio" name="like_managers" value="1" required></td>
+                                <td><input type="radio" name="like_managers" value="2"></td>
+                                <td><input type="radio" name="like_managers" value="3"></td>
+                                <td><input type="radio" name="like_managers" value="4"></td>
+                                <td><input type="radio" name="like_managers" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>I am learning skills that will help my career.</td>
+                                <td><input type="radio" name="learning_skills" value="1" required></td>
+                                <td><input type="radio" name="learning_skills" value="2"></td>
+                                <td><input type="radio" name="learning_skills" value="3"></td>
+                                <td><input type="radio" name="learning_skills" value="4"></td>
+                                <td><input type="radio" name="learning_skills" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>I am important to the company's overall success.</td>
+                                <td><input type="radio" name="important_success" value="1" required></td>
+                                <td><input type="radio" name="important_success" value="2"></td>
+                                <td><input type="radio" name="important_success" value="3"></td>
+                                <td><input type="radio" name="important_success" value="4"></td>
+                                <td><input type="radio" name="important_success" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Job Satisfaction</h2>
+                    <p style="margin-bottom: 20px; color: #7f8c8d;">How satisfied are you with the following aspects of your job?</p>
+                    
+                    <table class="rating-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Aspect</th>
+                                <th>Very Unsatisfied</th>
+                                <th>Unsatisfied</th>
+                                <th>Neutral</th>
+                                <th>Satisfied</th>
+                                <th>Very Satisfied</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Salary</td>
+                                <td><input type="radio" name="salary_satisfaction" value="1" required></td>
+                                <td><input type="radio" name="salary_satisfaction" value="2"></td>
+                                <td><input type="radio" name="salary_satisfaction" value="3"></td>
+                                <td><input type="radio" name="salary_satisfaction" value="4"></td>
+                                <td><input type="radio" name="salary_satisfaction" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Benefits</td>
+                                <td><input type="radio" name="benefits_satisfaction" value="1" required></td>
+                                <td><input type="radio" name="benefits_satisfaction" value="2"></td>
+                                <td><input type="radio" name="benefits_satisfaction" value="3"></td>
+                                <td><input type="radio" name="benefits_satisfaction" value="4"></td>
+                                <td><input type="radio" name="benefits_satisfaction" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Management</td>
+                                <td><input type="radio" name="management_satisfaction" value="1" required></td>
+                                <td><input type="radio" name="management_satisfaction" value="2"></td>
+                                <td><input type="radio" name="management_satisfaction" value="3"></td>
+                                <td><input type="radio" name="management_satisfaction" value="4"></td>
+                                <td><input type="radio" name="management_satisfaction" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Growth Opportunities</td>
+                                <td><input type="radio" name="growth_satisfaction" value="1" required></td>
+                                <td><input type="radio" name="growth_satisfaction" value="2"></td>
+                                <td><input type="radio" name="growth_satisfaction" value="3"></td>
+                                <td><input type="radio" name="growth_satisfaction" value="4"></td>
+                                <td><input type="radio" name="growth_satisfaction" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Overall Satisfaction</td>
+                                <td><input type="radio" name="overall_satisfaction" value="1" required></td>
+                                <td><input type="radio" name="overall_satisfaction" value="2"></td>
+                                <td><input type="radio" name="overall_satisfaction" value="3"></td>
+                                <td><input type="radio" name="overall_satisfaction" value="4"></td>
+                                <td><input type="radio" name="overall_satisfaction" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Open Feedback</h2>
+                    <div class="text-areas">
+                        <div class="form-group">
+                            <label for="like_most">What do you like the MOST about your current position?</label>
+                            <textarea id="like_most" name="like_most" placeholder="Share what you enjoy most about your role..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="like_least">What do you like the LEAST about your current position?</label>
+                            <textarea id="like_least" name="like_least" placeholder="Share what could be improved..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additional_comments">Please provide any additional comments or suggestions:</label>
+                        <textarea id="additional_comments" name="additional_comments" placeholder="Any other feedback, suggestions, or comments you'd like to share..."></textarea>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">Submit Anonymous Feedback</button>
+                    <div id="successMessage" class="success-message">
+                        ✅ Thank you! Your anonymous feedback has been submitted successfully.
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Store submissions in memory (in a real implementation, you'd send to a server)
+        let submissions = [];
+
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            // For Netlify forms, we don't prevent default submission
+            // The form will be submitted to Netlify's backend
+            
+            // Optional: Show a loading state
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+        });
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                this.closest('tr').style.background = '#e8f5e8';
+                setTimeout(() => {
+                    this.closest('tr').style.background = '';
+                }, 1000);
+            });
+        });
+
+        // Form validation feedback
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.addEventListener('invalid', function() {
+                this.style.borderColor = '#e74c3c';
+            });
+            
+            field.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.style.borderColor = '#27ae60';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+<form name="contact" netlify>
+  <p>
+    <label>Name <input type="text" name="name" /></label>
+  </p>
+  <p>
+    <label>Email <input type="email" name="email" /></label>
+  </p>
+  <p>
+    <button type="submit">Send</button>
+  </p>
+</form>
