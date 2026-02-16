@@ -13,41 +13,41 @@ function main() {
     document.querySelector(".error").style.display = "none";
     document.querySelector("#errortext").innerText = "";
 
-    // Fail if the b64 library or API was not loaded
+    // Comprova que les llibreries necessàries s'han carregat
     if (!("b64" in window)) {
-      error("Base64 library not loaded.");
+      error("No s'ha pogut carregar la llibreria Base64.");
       return;
     }
     if (!("apiVersions" in window)) {
-      error("API library not loaded.");
+      error("No s'ha pogut carregar la llibreria de l'API.");
       return;
     }
 
-    // Try to get page data from the URL if possible
+    // Intenta obtenir les dades de la URL
     const hash = window.location.hash.slice(1);
     let params;
     try {
       params = JSON.parse(b64.decode(hash));
     } catch {
-      error("The link appears corrupted.");
+      error("L'enllaç sembla malmès o incorrecte.");
       return;
     }
 
-    // Check that all required parameters encoded in the URL are present
+    // Comprova que hi ha els paràmetres necessaris
     if (!("v" in params && "e" in params)) {
-      error("The link appears corrupted. The encoded URL is missing necessary parameters.");
+      error("L'enllaç és incomplet o està malmès.");
       return;
     }
 
-    // Check that the version in the parameters is valid
+    // Comprova que la versió de l'API és compatible
     if (!(params["v"] in apiVersions)) {
-      error("Unsupported API version. The link may be corrupted.");
+      error("La versió d'aquest enllaç no és compatible.");
       return;
     }
 
     const api = apiVersions[params["v"]];
 
-    // Get values for decryption
+    // Obté els valors per a la desencriptació
     const encrypted = b64.base64ToBinary(params["e"]);
     const salt = "s" in params ? b64.base64ToBinary(params["s"]) : null;
     const iv = "i" in params ? b64.base64ToBinary(params["i"]) : null;
@@ -55,64 +55,62 @@ function main() {
     let hint, password;
     if ("h" in params) {
       hint = params["h"];
-      document.querySelector("#hint").innerText = "Hint: " + hint;
+      document.querySelector("#hint").innerText = "Pista: " + hint;
     }
 
     const unlockButton = document.querySelector("#unlockbutton");
     const passwordPrompt = document.querySelector("#password");
+
     passwordPrompt.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
         unlockButton.click();
       }
     });
+
     unlockButton.addEventListener("click", async () => {
       password = passwordPrompt.value;
 
-      // Decrypt and redirect if possible
+      // Intenta desencriptar i redirigir
       let url;
       try {
         url = await api.decrypt(encrypted, password, salt, iv);
       } catch {
-        // Password is incorrect.
-        error("Password is incorrect.");
+        error("La contrasenya introduïda no és correcta.");
 
-        // Set the "decrypt without redirect" URL appropriately
+        // Enllaços alternatius (si els mantens)
         document.querySelector("#no-redirect").href =
-          `https://jstrieb.github.io/link-lock/decrypt/#${hash}`;
+          `https://esplaimiv.github.io/Links-Protegits/decrypt/#${hash}`;
 
-        // Set the "create hidden bookmark" URL appropriately
         document.querySelector("#hidden").href =
-          `https://jstrieb.github.io/link-lock/hidden/#${hash}`;
+          `https://esplaimiv.github.io/Links-Protegits/hidden/#${hash}`;
+
         return;
       }
 
       try {
-        // Extra check to make sure the URL is valid. Probably shouldn't fail.
         let urlObj = new URL(url);
 
-        // Prevent XSS by making sure only HTTP URLs are used. Also allow magnet
-        // links for password-protected torrents.
         if (!(urlObj.protocol == "http:"
               || urlObj.protocol == "https:"
               || urlObj.protocol == "magnet:")) {
-          error(`The link uses a non-hypertext protocol, which is not allowed. `
-              + `The URL begins with "${urlObj.protocol}" and may be malicious.`);
+          error(
+            `L'enllaç utilitza un protocol no permès (${urlObj.protocol}). `
+            + `Per motius de seguretat, no es pot redirigir.`
+          );
           return;
         }
 
-        // IMPORTANT NOTE: must use window.location.href instead of the (in my
-        // opinion more proper) window.location.replace. If you use replace, it
-        // causes Chrome to change the icon of a bookmarked link to update it to
-        // the unlocked destination. This is dangerous information leakage.
         window.location.href = url;
+
       } catch {
-        error("A corrupted URL was encrypted. Cannot redirect.");
+        error("L'adreça desencriptada no és vàlida. No es pot redirigir.");
         console.log(url);
         return;
       }
     });
+
   } else {
-    // Otherwise redirect to the creator
+    // Si no hi ha hash, redirigeix al creador
     window.location.replace("./create");
   }
 }
