@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ca>
 
 <head>
   <!-- Metadata -->
@@ -10,7 +10,7 @@
 
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
-  <title>Link Lock - Password-protect links</title>
+  <title>Enllaços Protegits - Esplai MIV</title>
 
   <!-- Styles -->
   <link rel="stylesheet" href="style.css" type="text/css" />
@@ -39,24 +39,25 @@
 
     <hr />
 
-    <label for="password">password</label>
+    <label for="password">Contrasenya</label>
     <input type="password" id="password" autofocus />
-    <button id="unlockbutton">Unlock link</button>
+    <button id="unlockbutton">Desbloqueja l'àlbum</button>
     
     <hr />
 
-    <p> Si no recordeu la contrasenya, podeu sol·licitar-la als vostres monitors o monitores de referència. </p>
-    <p> També podeu contactar amb nosaltres per correu electrònic a esplaimiv@gmail.com o per WhatsApp al +34 655 655 655. </p>
+    <p style="font-size: 0.95em;"> Si no recordeu la contrasenya, podeu sol·licitar-la als vostres monitors o monitores de referència. 
+      També podeu contactar amb nosaltres per correu electrònic a 
+<a href="mailto:esplaimiv@gmail.com">esplaimiv@gmail.com</a> 
+o per WhatsApp al +34 655 655 655.
+</p>
+
 
   </div>
 
   <!-- Display errors in a big red box -->
   <div class="error red-border" style="display: none">
-    <p id="errortext">Error</p>
-    <button onclick="main()">Try again</button>
-    <a href="https://jstrieb.github.io/link-lock"><button>Lock a link</button></a>
-    <a href="https://jstrieb.github.io/link-lock/decrypt/" id="no-redirect" target="_blank"><button>Decrypt without redirect</button></a>
-    <a href="https://jstrieb.github.io/link-lock/hidden/" id="hidden" target="_blank"><button>Create hidden bookmark</button></a>
+    <p id="errortext">La contrasenya és incorrecte</p>
+    <button onclick="main()">Torna-ho a provar</button>
   </div>
 </body>
 
